@@ -69,7 +69,8 @@ function csvJSON(csv){
 
 var seatingJSON;
 
-async function loadLookUpTable() {
+async function loadLookUpTable()
+{
   let csv = await getText('https://sami-and-terence.github.io/seating_chart.csv')
 
   console.log(csv)
@@ -79,8 +80,28 @@ async function loadLookUpTable() {
   console.log(seatingJSON)
 }
 
-function findTableNumber() {
-  window.alert(seatingJSON)
+function filterByFirstName(dict, firstName)
+{
+
+}
+
+function filterByLastName(dict, lastName)
+{
+
+}
+
+function filterByMiddleInitial(dict, middleInitial)
+{
+
+}
+
+function findTableNumber()
+{
+  let firstName = document.getElementById('given-name').value
+  let middleInitial = document.getElementById('middle-initial').value
+  let lastName = document.getElementById('family-name').value
+
+  window.alert(firstName + middleInitial + lastName)
 
   return false;
 }
@@ -97,13 +118,13 @@ function findTableNumber() {
       Please enter your name to get your table number:
     </div>
     <div class="row">
-      <input class="fields" type="text" id="fname" name="firstname" placeholder="First Name">
+      <input class="fields" type="text" id="given-name" name="given-name" placeholder="First Name">
     </div>
     <div class="row">
-      <input type="text" class="fields" id="lname" name="middleinitial" placeholder="Middle Initial (optional)">
+      <input type="text" class="fields" id="middle-initial" name="middle-initial" placeholder="Middle Initial (optional)">
     </div>
     <div class="row">
-      <input type="text" class="fields" id="lname" name="lastname" placeholder="Last Name">
+      <input type="text" class="fields" id="family-name" name="family-name" placeholder="Last Name">
     </div>
     <div class="row">
       <input type="submit" class="col-25" value="Submit" onclick="return findTableNumber()">
