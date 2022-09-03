@@ -1,34 +1,112 @@
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
-  </style>
+.col-75 {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fields {
+  width:  100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+
+<script>
+async function getText(url) {
+  let response = await fetch(url)
+  let data = await response.text()
+  return data
+}
+
+//var csv is the CSV file with headers
+function csvJSON(csv){
+
+  var lines=csv.split("\n");
+
+  var result = [];
+
+  // NOTE: If your columns contain commas in their values, you'll need
+  // to deal with those before doing the next step 
+  // (you might convert them to &&& or something, then covert them back later)
+  // jsfiddle showing the issue https://jsfiddle.net/
+  var headers=lines[4].split(",");
+
+  for(var i=1;i<lines.length;i++){
+
+      var obj = {};
+      var currentline=lines[i].split(",");
+
+      for(var j=0;j<headers.length;j++){
+          obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+
+  }
+
+  //return result; //JavaScript object
+  return JSON.stringify(result); //JSON
+}
+
+var seatingJSON;
+
+async function loadLookUpTable() {
+  let csv = await getText('https://sami-and-terence.github.io/seating_chart.csv')
+
+  console.log(csv)
+
+  seatingJSON = csvJSON(csv)
+  
+  console.log(seatingJSON)
+}
+
+function findTableNumber() {
+  window.alert(seatingJSON)
+
+  return false;
+}
+
+</script>
 </head>
-<body>
-<img src="sami-and-terence.png" alt="Sami & Terence" />
+<body onload="loadLookUpTable()">
 <div class="container">
-  <form action="action_page.php">
+  <form>
+    <div class="row">
+      <img src="sami-and-terence.png" alt="Sami & Terence" />
+    </div>
     <div class="row">
       Please enter your name to get your table number:
     </div>
     <div class="row">
-      <div class="col-75">
-        <input type="text" id="fname" name="firstname" placeholder="First Name">
-      </div>
+      <input class="fields" type="text" id="fname" name="firstname" placeholder="First Name">
     </div>
     <div class="row">
-      <div class="col-75">
-        <input type="text" id="lname" name="middleinitial" placeholder="Middle Initial (optional)">
-      </div>
+      <input type="text" class="fields" id="lname" name="middleinitial" placeholder="Middle Initial (optional)">
     </div>
     <div class="row">
-      <div class="col-75">
-        <input type="text" id="lname" name="lastname" placeholder="Last Name">
-      </div>
+      <input type="text" class="fields" id="lname" name="lastname" placeholder="Last Name">
     </div>
     <div class="row">
-      <input type="submit" value="Submit">
+      <input type="submit" class="col-25" value="Submit" onclick="return findTableNumber()">
     </div>
   </form>
 </div>
