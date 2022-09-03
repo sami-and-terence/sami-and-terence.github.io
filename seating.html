@@ -121,7 +121,7 @@ function findTableNumber()
   let lastName = document.getElementById('family-name').value
 
   let l = filterByFirstName(seatingJSON, firstName)
-  l = filterByLastName(seatingJSON, lastName)
+  l = filterByLastName(l, lastName)
 
   if (l.length == 0)
   {
