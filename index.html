@@ -50,7 +50,7 @@ function csvJSON(csv){
   // jsfiddle showing the issue https://jsfiddle.net/
   var headers=lines[4].split(",");
 
-  for(var i=1;i<lines.length;i++){
+  for(var i=5;i<lines.length;i++){
 
       var obj = {};
       var currentline=lines[i].split(",");
@@ -63,8 +63,8 @@ function csvJSON(csv){
 
   }
 
-  //return result; //JavaScript object
-  return JSON.stringify(result); //JSON
+  return result; //JavaScript object
+  // return JSON.stringify(result); //JSON
 }
 
 var seatingJSON;
@@ -73,35 +73,64 @@ async function loadLookUpTable()
 {
   let csv = await getText('https://sami-and-terence.github.io/seating_chart.csv')
 
-  console.log(csv)
+  // console.log(csv)
 
   seatingJSON = csvJSON(csv)
   
-  console.log(seatingJSON)
+  // console.log(seatingJSON)
 }
 
-function filterByFirstName(dict, firstName)
+function filterByFirstName(list, firstName)
 {
+  let newList = []
 
+  for (let i = 0; i < list.length; i++)
+  {
+    // console.log(i)
+    // console.log(firstName.toLowerCase())
+    // console.log(list[i]['first name'].toLowerCase())
+    if (firstName.toLowerCase().trim() == list[i]['first name'].toLowerCase().trim())
+    {
+      newList.push(list[i])
+    }
+  }
+
+  console.log(newList)
+  return newList
 }
 
-function filterByLastName(dict, lastName)
+function filterByLastName(list, lastName)
 {
+  let newList = []
 
-}
+  for (let i = 0; i < list.length; i++)
+  {
+    if (lastName.toLowerCase().trim() == list[i]['last name'].toLowerCase().trim())
+    {
+      newList.push(list[i])
+    }
+  }
 
-function filterByMiddleInitial(dict, middleInitial)
-{
-
+  return newList
 }
 
 function findTableNumber()
 {
   let firstName = document.getElementById('given-name').value
-  let middleInitial = document.getElementById('middle-initial').value
+  // let middleInitial = document.getElementById('middle-initial').value
   let lastName = document.getElementById('family-name').value
 
-  window.alert(firstName + middleInitial + lastName)
+  let l = filterByFirstName(seatingJSON, firstName)
+  l = filterByLastName(seatingJSON, lastName)
+
+  if (l.length == 0)
+  {
+    window.alert('Unable to find your table number! Please talk to the wedding coordinator.')
+  }
+  else
+  {
+    window.alert('Please find your seat at TABLE ' + l[0]['Table #'])
+  }
 
   return false;
 }
@@ -118,13 +147,13 @@ function findTableNumber()
       Please enter your name to get your table number:
     </div>
     <div class="row">
-      <input class="fields" type="text" id="given-name" name="given-name" placeholder="First Name">
+      <input class="fields" type="text" id="given-name" placeholder="First Name">
     </div>
     <div class="row">
-      <input type="text" class="fields" id="middle-initial" name="middle-initial" placeholder="Middle Initial (optional)">
+      <input type="text" class="fields" id="middle-initial" placeholder="Middle Initial (optional)">
     </div>
     <div class="row">
-      <input type="text" class="fields" id="family-name" name="family-name" placeholder="Last Name">
+      <input type="text" class="fields" id="family-name" placeholder="Last Name">
     </div>
     <div class="row">
       <input type="submit" class="col-25" value="Submit" onclick="return findTableNumber()">
