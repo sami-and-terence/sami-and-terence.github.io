@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .row {
   display: flex;
   justify-content: center;
@@ -73,11 +75,7 @@ async function loadLookUpTable()
 {
   let csv = await getText('https://sami-and-terence.github.io/seating_chart.csv')
 
-  // console.log(csv)
-
   seatingJSON = csvJSON(csv)
-  
-  // console.log(seatingJSON)
 }
 
 function filterByFirstName(list, firstName)
@@ -86,16 +84,11 @@ function filterByFirstName(list, firstName)
 
   for (let i = 0; i < list.length; i++)
   {
-    // console.log(i)
-    // console.log(firstName.toLowerCase())
-    // console.log(list[i]['first name'].toLowerCase())
     if (firstName.toLowerCase().trim() == list[i]['first name'].toLowerCase().trim())
     {
       newList.push(list[i])
     }
   }
-
-  console.log(newList)
   return newList
 }
 
@@ -110,7 +103,20 @@ function filterByLastName(list, lastName)
       newList.push(list[i])
     }
   }
+  return newList
+}
 
+function filterByMiddleInitial(list, middleInitial)
+{
+  let newList = []
+
+  for (let i = 0; i < list.length; i++)
+  {
+    if (middleInitial.toLowerCase().trim()[0] == list[i]['Middle Initial'].toLowerCase().trim()[0])
+    {
+      newList.push(list[i])
+    }
+  }
   return newList
 }
 
@@ -121,15 +127,39 @@ function findTableNumber()
   let lastName = document.getElementById('family-name').value
 
   let l = filterByFirstName(seatingJSON, firstName)
-  l = filterByLastName(l, lastName)
+
+  if (l.length != 1)
+  {
+    // ignore last name - this should handle maiden name changes (or lack thereof)
+    l = filterByLastName(l, lastName)
+  }
+
+  if (l.length > 1)
+  {
+    let middleInitial = document.getElementById('middle-initial').value
+    if (middleInitial != '')
+    {
+      l = filterByMiddleInitial(l, middleInitial)
+    }
+  }
 
   if (l.length == 0)
   {
     window.alert('Unable to find your table number! Please talk to the wedding coordinator.')
   }
-  else
+  else if (l.length == 1)
   {
     window.alert('Please find your seat at TABLE ' + l[0]['Table #'])
+  }
+  else
+  {
+    let s = 'Did you mean...\n\n'
+    for (let i = 0; i < l.length; i++)
+    {
+      s += '  ' + l[i]['first name'] + ' ' + l[i]['Middle Initial'] + ' ' + l[i]['last name'] + ': TABLE ' + l[i]['Table #'] + '\n'
+    }
+
+    window.alert(s)
   }
 
   return false;
@@ -157,6 +187,9 @@ function findTableNumber()
     </div>
     <div class="row">
       <input type="submit" class="col-25" value="Submit" onclick="return findTableNumber()">
+    </div>
+    <div class="row">
+      <img src="floor_plan.png" alt="floor plan" />
     </div>
   </form>
 </div>
