@@ -156,7 +156,7 @@ function findTableNumber()
     let s = 'Did you mean...\n\n'
     for (let i = 0; i < l.length; i++)
     {
-      s += '  ' + l[i]['first name'] + ' ' + l[i]['Middle Initial'] + ' ' + l[i]['last name'] + ': TABLE ' + l[i]['Table #'] + '\n'
+      s += '  ' + l[i]['first name'] + ' ' + l[i]['Middle Initial'] + ' ' + l[i]['last name'] + '? TABLE ' + l[i]['Table #'] + '\n'
     }
 
     window.alert(s)
@@ -174,7 +174,7 @@ function findTableNumber()
       <img src="sami-and-terence.png" alt="Sami & Terence" />
     </div>
     <div class="row">
-      Please enter your name to get your table number:
+      Please enter your name to see your table number:
     </div>
     <div class="row">
       <input class="fields" type="text" id="given-name" placeholder="First Name">
